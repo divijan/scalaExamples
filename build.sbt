@@ -1,9 +1,8 @@
 organization := "home"
 
-name := "test"
+name := "scalaExamples"
 
 version := "0.1.0-SNAPSHOT"
-
 
 scalaVersion := "2.11.5"
 

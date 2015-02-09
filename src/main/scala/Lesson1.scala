@@ -5,7 +5,7 @@ import org.joda.time._
  */
 
 
-object Lesson1 {
+object Lesson1 extends App {
   implicit class MyInt(i : Int) {
     /* parentheses are optional in methods without arguments
        return types are also mostly optional: scala compiler can infer them from the right-hand side of the method
@@ -22,7 +22,14 @@ object Lesson1 {
      it also has a variable field _money_ of type Float
      this class is MUTABLE. It means it can change its state during its lifetime
    */
-  class Wallet(var money: Float) {
+  class Wallet(private var _money: Float) {
+    private val negMoneyException = new IllegalArgumentException("A wallet cannot have negative amount")
+
+    if (_money < 0) throw negMoneyException
+
+    def money = _money // getter
+    def money_=(newMoney: Float): Unit =
+      if (newMoney < 0) throw negMoneyException else _money = newMoney // setter
     // val, once evaluated, stores the same value
     val dateCreated = new DateTime
     // def, on the other hand, evaluates right-hand side every time it is accessed
@@ -38,19 +45,22 @@ object Lesson1 {
     * from which we cannot inherit directly
     * toString on MyInt is called automatically, just like in Java 
     */
-    val five = MyInt(5) // implicit class can be instantiated just like a regular class
+    val five = MyInt(5) // implicit class can be instantiated just like a regular class, even without new keyword
     println(s"five is $five")
     
     /* def and val */
     val myWallet = new Wallet(500)
+    //val wrongWallet = new Wallet(-5)
     val created1 = myWallet.dateCreated
     val now1 = myWallet.now
     myWallet.money += 300 // the wallet is the same. The money is different
-    println("my wallet is now " + myWallet + " " + myWallet.now)
+    println("my wallet is now " + myWallet + " " + myWallet.now + ", it has " + myWallet.money)
     val created2 = myWallet.dateCreated
     val now2 = myWallet.now
-    assert(created1 == created2 && now1 != now2) // the difference between the def and the val
+    assert(created1 == created2 && now1 == now2) // the difference between the def and the val
+    //require
   }
-  
-  
+  //TODO: abstract class instantiation
+
+  demo
 }
